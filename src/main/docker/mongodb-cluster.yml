@@ -1,0 +1,16 @@
+version: '2'
+services:
+  issuingbank-mongodb:
+    image: mongo:4.0.13
+    ports:
+      - '27017:27017'
+    command: mongos --configdb issuingbank-mongodb-config
+  issuingbank-mongodb-node:
+    build:
+      context: .
+      dockerfile: mongodb/MongoDB.Dockerfile
+    command: mongod --replSet rs1 --noprealloc --smallfiles
+  issuingbank-mongodb-config:
+    image: mongo:4.0.13
+    container_name: issuingbank-mongodb-config
+    command: mongod --noprealloc --smallfiles --configsvr --dbpath /data/db
